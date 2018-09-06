@@ -23,7 +23,7 @@ Game::Game(int width, int height) : _width(width), _height(height)
 {
 	this->_columns = width / BLOCK_SIZE;
 	this->_rows = height / BLOCK_SIZE;
-	Snake _snake(_rows / 2, _columns / 2, DOWN);
+	this->_snake = new Snake(_rows / 2, _columns / 2, DOWN);
 	std::vector<int> temp;
 	for(int i = 0; i <= this->_columns; i++) 
 	{
@@ -33,7 +33,7 @@ Game::Game(int width, int height) : _width(width), _height(height)
 	{
 		this->_map.push_back(temp);
 	}
-	PlaceSnake(_snake);
+	PlaceSnake();
 	PlaceFood();
 	PrintMap();
 }
@@ -55,7 +55,7 @@ void	Game::Loop()
 	try
 	{
 		IFunctions *func = factory.CreateLibrary(SDL);
-		while(_snake.MoveSnake(_map))
+		while(_snake->MoveSnake())
 		{
 			if (func->Event())
 			{
@@ -72,9 +72,7 @@ void	Game::Loop()
 					ChangeSnakeDirection(func->Key());
 				}
 			}
-			PrintMap();
-			std::cout << std::endl;
-			// func->Render(_map);
+			func->Render(_map);
 		}
 		factory.CloseLibrary(func);
 	}
@@ -115,9 +113,9 @@ void	Game::PlaceFood()
 	_map[y][x] = FOOD;
 }
 
-void	Game::PlaceSnake(Snake &snake)
+void	Game::PlaceSnake()
 {
-	std::vector<ScreenObject *> display_snake = snake.getSnake();
+	std::vector<ScreenObject *> display_snake = _snake->getSnake();
 	for(size_t i = 0; i < display_snake.size(); i++)
 	{
 		int x = display_snake[i]->GetX();
@@ -128,7 +126,7 @@ void	Game::PlaceSnake(Snake &snake)
 
 void	Game::ChangeSnakeDirection(int direction)
 {
-	std::vector<ScreenObject *> display_snake = _snake.getSnake();
+	std::vector<ScreenObject *> display_snake = _snake->getSnake();
 	for(size_t i = 0; i < display_snake.size(); i++)
 	{
 		if (display_snake[i]->GetType() == SNAKE_HEAD)

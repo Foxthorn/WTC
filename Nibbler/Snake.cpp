@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Snake.hpp"
+#include <iostream>
 
 Snake::Snake() {}
 
@@ -45,9 +46,8 @@ std::vector<ScreenObject *>	Snake::getSnake()
 	return this->_snake;
 }
 
-bool	Snake::MoveSnake(std::vector<std::vector<int>> & map)
+bool	Snake::MoveSnake()
 {
-	int adjustment;
 	for(size_t i = 0; i < this->_snake.size(); i++)
 	{
 		int x = this->_snake[i]->GetX();
@@ -55,18 +55,20 @@ bool	Snake::MoveSnake(std::vector<std::vector<int>> & map)
 		switch(this->_snake[i]->GetDirection())
 		{
 			case UP:
-				this->_snake[i]->SetX(x - 1);
+				x -= 1;
 				break;
 			case DOWN:
-				this->_snake[i]->SetX(x + 1);
+				x += 1;
 				break;
 			case RIGHT:
-				this->_snake[i]->SetY(y + 1);
+				y += 1;
 				break;
 			case LEFT:
-				this->_snake[i]->SetY(y - 1);
+				y -= 1;
 				break;
 		}
+		this->_snake[i]->SetY(y);
+		this->_snake[i]->SetX(x);
 		if (i != 0)
 		{
 			if (_snake[i]->GetDirection() != _snake[i - 1]->GetDirection())
@@ -89,10 +91,16 @@ bool	Snake::ValidMove()
 			{
 				if (_snake[i]->GetX() == _snake[j]->GetY())
 				{
+					std::cout << _snake[i]->GetType() << " - " << _snake[j]->GetType() << std::endl;
 					return false;
 				}
 			}
 		}
 	}
 	return true;
+}
+
+void	Snake::PrintSnake()
+{
+
 }

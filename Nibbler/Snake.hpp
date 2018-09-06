@@ -27,7 +27,8 @@ class Snake
 		Snake & operator=(Snake const & src);
 
 		std::vector<ScreenObject *>	getSnake();
-		bool						MoveSnake(std::vector<std::vector<int>> & map);
+		bool						MoveSnake();
+		void	PrintSnake();
 
 	private:
 		bool						ValidMove();

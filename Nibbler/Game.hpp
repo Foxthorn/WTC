@@ -32,7 +32,7 @@ class Game {
 
 		void	PrintMap();
 		void	PlaceFood();
-		void	PlaceSnake(Snake &snake);
+		void	PlaceSnake();
 		void	ChangeSnakeDirection(int direction);
 		void	Loop();
 
@@ -41,7 +41,7 @@ class Game {
 		int								_height;
 		int								_columns;
 		int								_rows;
-		Snake							_snake;
+		Snake							 *_snake;
 		ScreenObject					_food;
 		std::vector<std::vector<int>> 	_map;
 
