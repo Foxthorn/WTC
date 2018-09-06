@@ -19,10 +19,14 @@ int	main(int ac, char** av)
 	if (ac != 3) 
 	{
 		std::cout << "Usage: ./nibbler [window: width] [window: height]" << std::endl;
+		std::cout << "MIN_WIDTH = 100" << std::endl;
+		std::cout << "MIN_HEIGHT = 100" << std::endl;
 	}
 	else 
 	{
-		Game game(std::atoi(av[1]), std::atoi(av[2]));
-		game.InitMap();
+		if (std::atoi(av[1]) >= 100 && std::atoi(av[2]) >= 100) {
+			Game game(std::atoi(av[1]), std::atoi(av[2]));
+			game.Loop();
+		}
 	}
 }

@@ -196,7 +196,6 @@ std::string Parse::GetValue(int pos)
 void        Parse::CheckValidValue(std::string value) 
 {
     bool decimal = false;
-    bool negative = false;
     for(int i = 0; i < (int)value.length(); i++) {
         if (value[i] == '.') {
             if (decimal == true) {
@@ -205,10 +204,9 @@ void        Parse::CheckValidValue(std::string value)
             decimal = true;
         }
         else if (value[i] == '-') {
-            if (negative == true) {
+            if (i != 0) {
                 throw Error::LexicalError();
             }
-            negative = true;
         }
         else if (!std::isdigit(static_cast<unsigned char>(value[i]))) {
             throw Error::LexicalError();

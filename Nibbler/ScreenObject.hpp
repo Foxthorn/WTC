@@ -18,6 +18,7 @@
 class ScreenObject {
 	public:
 		ScreenObject();
+		ScreenObject(int x, int y, int type, int direction);
 		ScreenObject(ScreenObject const & src);
 		~ScreenObject();
 		ScreenObject & operator=(ScreenObject const & src);
@@ -25,14 +26,17 @@ class ScreenObject {
 		void	SetX(int x);
 		void	SetY(int y);
 		void	SetType(int type);
+		void	SetDirection(int direction);
 		int		GetX();
 		int		GetY();
 		int		GetType();
+		int		GetDirection();
 
 	private:
 		int	_x;
 		int	_y;
 		int	_type;
+		int	_direction;
 
 	protected:
 

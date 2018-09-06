@@ -17,6 +17,10 @@
 #include <iostream>
 #include "eGameObjects.hpp"
 #include "ScreenObject.hpp"
+#include "Snake.hpp"
+#include "eDirection.hpp"
+#include "IFunctions.hpp"
+#include "Factory.hpp"
 
 class Game {
 	public:
@@ -26,15 +30,19 @@ class Game {
 		~Game();
 		Game & operator=(Game const & src);
 
-		void	InitMap();
+		void	PrintMap();
 		void	PlaceFood();
-		void	PlaceSnake();
+		void	PlaceSnake(Snake &snake);
+		void	ChangeSnakeDirection(int direction);
+		void	Loop();
 
 	private:
 		int								_width;
 		int								_height;
+		int								_columns;
+		int								_rows;
+		Snake							_snake;
 		ScreenObject					_food;
-		std::vector<ScreenObject>		_snake;
 		std::vector<std::vector<int>> 	_map;
 
 };
