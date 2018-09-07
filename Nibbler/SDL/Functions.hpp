@@ -36,6 +36,7 @@ class Functions : public IFunctions
 		SDL_Window 		* _window;
 		SDL_Renderer 	* _renderer;
 		SDL_Event		_event;
+		bool			_keyPressed;
 		int				_columns;
 		int				_rows;
 		int				_width;

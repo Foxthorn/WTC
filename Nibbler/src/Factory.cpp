@@ -32,14 +32,14 @@ Factory::~Factory()
 
 IFunctions *Factory::CreateLibrary(int library)
 {
-	if (library == _currentLibrary)
-	{
-		return (_graphicsInstance);
-	}
-	else
-	{
+	// if (library == _currentLibrary)
+	// {
+	// 	return (_graphicsInstance);
+	// }
+	// else
+	// {
 		CloseLibrary(_graphicsInstance);
-	}
+	// }
 	std::cout << "Create Library " << library << std::endl;
 
 	switch(library)
@@ -63,15 +63,15 @@ Factory & Factory::operator=(Factory const & src) {
 
 void		Factory::CloseLibrary(IFunctions * graphicsInstance)
 {
-	if (!_dlhandle) throw Error::NoDLOpenException();
+	if (!_dlHandle) throw Error::NoDLOpenException();
 
 	void  (*destroy)(IFunctions *);
-	destroy = (void(*)(IFunctions *))dlsym(_dlhandle, "deleteFunctions");
+	destroy = (void(*)(IFunctions *))dlsym(_dlHandle, "deleteFunctions");
 	if (!destroy) throw Error::DLError();
 
 	destroy(graphicsInstance);
-	dlclose(_dlhandle);
-	_dlhandle = NULL;
+	dlclose(_dlHandle);
+	_dlHandle = NULL;
 	_currentLibrary = 0;
 	_graphicsInstance = NULL;
 }
@@ -79,8 +79,8 @@ void		Factory::CloseLibrary(IFunctions * graphicsInstance)
 IFunctions * Factory::CreateSDL()
 {
 	std::cout << "SDL" << std::endl;
-	_dlhandle = dlopen("sdl/libsdl.dylib", RTLD_LAZY);
-	if (!_dlhandle)
+	_dlHandle = dlopen("sdl/libsdl.dylib", RTLD_LAZY);
+	if (!_dlHandle)
 	{
 		throw Error::OpeningDLException();
 	}
@@ -88,7 +88,7 @@ IFunctions * Factory::CreateSDL()
 	_currentLibrary = SDL;
 
 	IFunctions *(*create)(void);
-	create = (IFunctions *(*)())dlsym(_dlhandle, "createFunctions");
+	create = (IFunctions *(*)())dlsym(_dlHandle, "createFunctions");
 	if (!create)
 	{
 		throw Error::DLError();
@@ -102,8 +102,8 @@ IFunctions * Factory::CreateSDL()
 IFunctions * Factory::CreateSFML()
 {
 	std::cout << "SFML" << std::endl;
-	_dlhandle = dlopen("sfml/libsfml.dylib", RTLD_LAZY);
-	if (!_dlhandle)
+	_dlHandle = dlopen("sfml/libsfml.dylib", RTLD_LAZY);
+	if (!_dlHandle)
 	{
 		throw Error::OpeningDLException();
 	}
@@ -111,7 +111,7 @@ IFunctions * Factory::CreateSFML()
 	_currentLibrary = SFML;
 
 	IFunctions *(*create)(void);
-	create = (IFunctions *(*)())dlsym(_dlhandle, "createFunctions");
+	create = (IFunctions *(*)())dlsym(_dlHandle, "createFunctions");
 	if (!create)
 	{
 		throw Error::DLError();

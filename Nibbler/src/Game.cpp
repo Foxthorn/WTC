@@ -51,7 +51,8 @@ Game & Game::operator=(Game const & src)
 void	Game::Loop()
 {
 	Factory factory(_width, _height);
-	IFunctions *func = factory.CreateLibrary(SFML);
+	// Factory * factory = new Factory(_width, _height);
+	IFunctions * func = factory.CreateLibrary(SDL);
 	while(_snake->MoveSnake(_map))
 	{
 		if (func->Event())
@@ -66,8 +67,13 @@ void	Game::Loop()
 			}
 			else if (func->Key() == KEY_1 || func->Key() == KEY_2)
 			{
-				if (func->Key() == KEY_1) func = factory.CreateLibrary(SDL);
-				else if (func->Key() == KEY_2) func = factory.CreateLibrary(SFML);
+				if (func->Key() == KEY_1) {
+					func = factory.CreateLibrary(SDL);
+				}
+				if (func->Key() == KEY_2)
+				{
+					func = factory.CreateLibrary(SFML);
+				} 
 			}
 			else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
 			{

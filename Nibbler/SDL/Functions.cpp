@@ -15,7 +15,7 @@
 Functions::Functions()
 {
 	std::cout << "SDL CONSTRUCTED" << std::endl;
-	if (SDL_Init(SDL_INIT_EVERYTHING != 0))
+	if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
 		throw Error::InitError();
 	}
@@ -99,6 +99,7 @@ void	Functions::Initialise(int width, int height)
 	SDL_SetWindowTitle(this->_window, "Nibbler SDL");
 	SDL_SetWindowPosition(this->_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
+	std::cout << "Initialise SDL" << std::endl; 
 	this->_width = width;
 	this->_height = height;
 	this->_columns = width / BLOCK_SIZE;

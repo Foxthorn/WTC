@@ -43,6 +43,8 @@ Functions & Functions::operator=(Functions const & src) {
 
 void	Functions::Initialise(int width, int height)
 {
+	std::cout << "Initialise SFML" << std::endl; 
+
 	this->_width = width;
 	this->_height = height;
 	this->_columns = width / BLOCK_SIZE;

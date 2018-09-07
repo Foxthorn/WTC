@@ -34,7 +34,7 @@ class Factory {
 		IFunctions	* CreateOpenGL();	
 		IFunctions	* CreateSFML();
 		int			_currentLibrary;
-		void		* _dlhandle;
+		void		* _dlHandle;
 		IFunctions	* _graphicsInstance;
 		int			_width;
 		int			_height;
