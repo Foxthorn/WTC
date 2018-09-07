@@ -23,7 +23,7 @@ Game::Game(int width, int height) : _width(width), _height(height)
 {
 	this->_columns = width / BLOCK_SIZE;
 	this->_rows = height / BLOCK_SIZE;
-	this->_snake = new Snake(_rows / 2, _columns / 2, DOWN);
+	this->_snake = new Snake(_rows / 2, _columns / 2, RIGHT);
 	std::vector<int> temp;
 	for(int i = 0; i <= this->_columns; i++) 
 	{
@@ -35,7 +35,6 @@ Game::Game(int width, int height) : _width(width), _height(height)
 	}
 	PlaceSnake();
 	PlaceFood();
-	PrintMap();
 }
 
 Game::~Game() {}
@@ -52,33 +51,44 @@ Game & Game::operator=(Game const & src)
 void	Game::Loop()
 {
 	Factory factory(_width, _height);
-	try
+	IFunctions *func = factory.CreateLibrary(SFML);
+	while(_snake->MoveSnake(_map))
 	{
-		IFunctions *func = factory.CreateLibrary(SDL);
-		while(_snake->MoveSnake())
+		if (func->Event())
 		{
-			if (func->Event())
+			if (func->Close())
 			{
-				if (func->Close())
-				{
-					break;
-				}
-				else if (func->Key() == ESC_KEY)
-				{
-					break;
-				}
-				else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
-				{
-					ChangeSnakeDirection(func->Key());
-				}
+				break;
 			}
-			func->Render(_map);
+			else if (func->Key() == ESC_KEY)
+			{
+				break;
+			}
+			else if (func->Key() == KEY_1 || func->Key() == KEY_2)
+			{
+				if (func->Key() == KEY_1) func = factory.CreateLibrary(SDL);
+				else if (func->Key() == KEY_2) func = factory.CreateLibrary(SFML);
+			}
+			else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
+			{
+				ChangeSnakeDirection(func->Key());
+			}
 		}
-		factory.CloseLibrary(func);
+		func->Render(_map);
+		func->Sleep(100);
+		CheckFood();
 	}
-	catch (std::exception &e)
+	factory.CloseLibrary(func);
+	
+}
+
+void	Game::CheckFood()
+{
+	auto snake = _snake->getSnake();
+	if (_food.GetX() == snake[0]->GetX() && _food.GetY() == snake[0]->GetY())
 	{
-		std::cout << e.what() << std::endl;
+		_snake->EatFood();
+		PlaceFood();
 	}
 }
 
@@ -127,12 +137,10 @@ void	Game::PlaceSnake()
 void	Game::ChangeSnakeDirection(int direction)
 {
 	std::vector<ScreenObject *> display_snake = _snake->getSnake();
-	for(size_t i = 0; i < display_snake.size(); i++)
-	{
-		if (display_snake[i]->GetType() == SNAKE_HEAD)
-		{
-			display_snake[i]->SetDirection(direction);
-			break;
-		}
-	}
+	if (display_snake[0]->GetDirection() == UP && direction == DOWN) return;
+	if (display_snake[0]->GetDirection() == DOWN && direction == UP) return;
+	if (display_snake[0]->GetDirection() == LEFT && direction == RIGHT) return;
+	if (display_snake[0]->GetDirection() == RIGHT && direction == LEFT) return;
+	if (display_snake[0]->GetType() == SNAKE_HEAD)
+		display_snake[0]->SetDirection(direction);
 }

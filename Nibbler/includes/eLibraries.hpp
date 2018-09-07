@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   eKeys.hpp                                           :+:      :+:    :+:   */
+/*   Elibraries.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpauwels   <marvin@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/05 07/22/57 by cpauwels          #+#    #+#             */
-/*   Updated: 2018/09/05 07/22/57 by cpauwels         ###   ########.fr       */
+/*   Created: 2018/09/04 10/19/52 by cpauwels          #+#    #+#             */
+/*   Updated: 2018/09/04 10/19/52 by cpauwels         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef		EKEYS_HPP
-# define	EKEYS_HPP
+#ifndef		ELIBRARIES_HPP
+# define	ELIBRARIES_HPP
 
-enum Keys
+enum Library
 {
-	UP_KEY = 0,
-	DOWN_KEY = 1,
-	LEFT_KEY = 2,
-	RIGHT_KEY = 3,
-	ESC_KEY = 4,
-	KEY_1 = 5,
-	KEY_2 = 6,
-	KEY_3 = 7
+	SDL = 0,
+	SFML = 1,
+	OPENGL = 2,
 };
 
 #endif

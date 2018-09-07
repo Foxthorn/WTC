@@ -11,9 +11,7 @@
 /* ************************************************************************** */
 
 #include "Factory.hpp"
-
-Factory::Factory()
-{}
+#include <dlfcn.h>
 
 Factory::Factory(Factory const & src) {
 	*this = src;	
@@ -21,10 +19,39 @@ Factory::Factory(Factory const & src) {
 
 Factory::Factory(int width, int height) : _width(width), _height(height)
 {
-	this->_currentLibrary = NONE;
+	std::cout << "Create Factory" << std::endl;
+	this->_currentLibrary = SDL;
+	CreateSDL();
 }
 
-Factory::~Factory() {}
+Factory::~Factory()
+{
+	if (_currentLibrary)
+		CloseLibrary(_graphicsInstance);
+}
+
+IFunctions *Factory::CreateLibrary(int library)
+{
+	if (library == _currentLibrary)
+	{
+		return (_graphicsInstance);
+	}
+	else
+	{
+		CloseLibrary(_graphicsInstance);
+	}
+	std::cout << "Create Library " << library << std::endl;
+
+	switch(library)
+	{
+		case SDL:
+			return CreateSDL();
+		case SFML:
+			return CreateSFML();
+		default:
+			return NULL;
+	}
+}
 
 Factory & Factory::operator=(Factory const & src) {
 	if (this != &src)
@@ -36,39 +63,22 @@ Factory & Factory::operator=(Factory const & src) {
 
 void		Factory::CloseLibrary(IFunctions * graphicsInstance)
 {
-	if(!_dlhandle) 
-	{
-		throw Error::NoDLOpenException();
-	}
-	void (*destroy)(IFunctions *);
-	destroy = (void (*)(IFunctions *))dlsym(_dlhandle, "deleteFunctions");
-	if (!destroy) 
-	{
-		throw Error::DLError();
-	}
+	if (!_dlhandle) throw Error::NoDLOpenException();
+
+	void  (*destroy)(IFunctions *);
+	destroy = (void(*)(IFunctions *))dlsym(_dlhandle, "deleteFunctions");
+	if (!destroy) throw Error::DLError();
+
 	destroy(graphicsInstance);
 	dlclose(_dlhandle);
 	_dlhandle = NULL;
-	_currentLibrary = NONE;
+	_currentLibrary = 0;
 	_graphicsInstance = NULL;
-}
-
-IFunctions *Factory::CreateLibrary(int librabry)
-{
-	if (librabry == this->_currentLibrary)
-	{
-		return this->_graphicsInstance;
-	}
-	else if (this->_currentLibrary != NONE)
-	{
-		CloseLibrary(this->_graphicsInstance);
-	}
-
-	return CreateSDL();
 }
 
 IFunctions * Factory::CreateSDL()
 {
+	std::cout << "SDL" << std::endl;
 	_dlhandle = dlopen("sdl/libsdl.dylib", RTLD_LAZY);
 	if (!_dlhandle)
 	{
@@ -76,6 +86,29 @@ IFunctions * Factory::CreateSDL()
 	}
 
 	_currentLibrary = SDL;
+
+	IFunctions *(*create)(void);
+	create = (IFunctions *(*)())dlsym(_dlhandle, "createFunctions");
+	if (!create)
+	{
+		throw Error::DLError();
+	}
+
+	this->_graphicsInstance = create();
+	this->_graphicsInstance->Initialise(_width, _height);
+	return this->_graphicsInstance;
+}
+
+IFunctions * Factory::CreateSFML()
+{
+	std::cout << "SFML" << std::endl;
+	_dlhandle = dlopen("sfml/libsfml.dylib", RTLD_LAZY);
+	if (!_dlhandle)
+	{
+		throw Error::OpeningDLException();
+	}
+
+	_currentLibrary = SFML;
 
 	IFunctions *(*create)(void);
 	create = (IFunctions *(*)())dlsym(_dlhandle, "createFunctions");

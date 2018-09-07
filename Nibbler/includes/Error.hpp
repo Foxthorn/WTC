@@ -59,6 +59,13 @@ class Error
             {
                 return "Exception:: Occured during opening of Dynamic Library";
             }
+        };       
+        class ArgumentsException : public std::exception
+        {
+            virtual const char* what() const throw()
+            {
+                return "Exception:: Invalid Arguments";
+            }
         };
         
 };

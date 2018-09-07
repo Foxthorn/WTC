@@ -5,13 +5,19 @@ project(nibbler)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -stdlib=libc++")
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/includes)
+
 add_executable(
     nibbler
-    main.cpp
-    Game.cpp
-    Factory.cpp
-    Snake.cpp
-    ScreenObject.cpp   
+    src/main.cpp
+    src/Game.cpp
+    src/Factory.cpp
+    src/Snake.cpp
+    src/ScreenObject.cpp   
 )
     
 add_subdirectory(SDL)
+
+add_subdirectory(SFML)
+
+#add_subdirectory(OPENGL)

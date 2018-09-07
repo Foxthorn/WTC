@@ -12,8 +12,9 @@
 
 #include "Functions.hpp"
 
-Functions::Functions() 
+Functions::Functions()
 {
+	std::cout << "SDL CONSTRUCTED" << std::endl;
 	if (SDL_Init(SDL_INIT_EVERYTHING != 0))
 	{
 		throw Error::InitError();
@@ -24,8 +25,9 @@ Functions::Functions(Functions const & src) {
 	*this = src;	
 }
 
-Functions::~Functions() 
+Functions::~Functions()
 {
+	std::cout << "SDL DECONSTRUCTED" << std::endl;
 	SDL_DestroyRenderer(this->_renderer);
 	SDL_DestroyWindow(this->_window);
 	SDL_Quit();
@@ -34,7 +36,13 @@ Functions::~Functions()
 Functions & Functions::operator=(Functions const & src) {
 	if (this != &src)
     {
-		*this = src;
+		this->_window = src._window;
+		this->_renderer = src._renderer;
+		this->_event = src._event;
+		this->_width = src._width;
+		this->_height = src._height;
+		this->_columns = src._columns;
+		this->_rows = src._rows;
     }
 	return (*this);
 }
@@ -42,16 +50,15 @@ Functions & Functions::operator=(Functions const & src) {
 void		Functions::Render(std::vector<std::vector<int>> & map)
 {
 	SDL_Rect block;
-	SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(this->_renderer, 128, 128, 128, 0);
 	SDL_RenderClear(this->_renderer);
 	block.h = BLOCK_SIZE;
 	block.w = BLOCK_SIZE;
-	for(size_t col = 0; col < this->_columns; col++)
+	for(int col = 0; col < this->_columns; col++)
 	{
-		for(size_t row = 0; row < this->_rows; row++)
+		for(int row = 0; row < this->_rows; row++)
 		{
 			bool drawn = false;
-			// std::cout << map[row][col] << std::endl;
 			if (map[row][col] == SNAKE_BODY)
 			{
 				SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 0);
@@ -83,11 +90,11 @@ void	Functions::Initialise(int width, int height)
 	// if (SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_FULLSCREEN, &this->_window, &this->_renderer) == -1) 
 	// {
 	// 	throw Error::CreateWindowException();
-	// }	
+	// }		
 	if (SDL_CreateWindowAndRenderer(width, height, 0, &this->_window, &this->_renderer) == -1) 
 	{
 		throw Error::CreateWindowException();
-	}
+	}	
 
 	SDL_SetWindowTitle(this->_window, "Nibbler SDL");
 	SDL_SetWindowPosition(this->_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -100,15 +107,16 @@ void	Functions::Initialise(int width, int height)
 
 bool	Functions::Event()
 {
-	if (SDL_PollEvent(&this->_event) == 1)
+	if (SDL_PollEvent(&this->_event) == 1) 
+	{
 		return true;
-	else
-		return false;
+	}
+	return false;
 }
 
 Keys	Functions::Key()
 {
-	if (this->_event.type == SDL_KEYDOWN)
+	if (this->_event.type == SDL_KEYDOWN) 
 	{
 		if (this->_event.key.keysym.sym == SDLK_UP)
 		{
@@ -143,6 +151,12 @@ Keys	Functions::Key()
 			return Keys::KEY_3;
 		}
 	}
+	return Keys::NO_KEY;
+}
+
+void	Functions::Sleep(int sleep)
+{
+	SDL_Delay(sleep);
 }
 
 bool	Functions::Close()

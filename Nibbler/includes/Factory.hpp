@@ -14,7 +14,6 @@
 # define	FACTORY_HPP
 
 #include <iostream>
-#include <dlfcn.h>
 #include "eLibraries.hpp"
 #include "IFunctions.hpp"
 #include "Error.hpp"

@@ -12,6 +12,7 @@
 
 #include "Snake.hpp"
 #include <iostream>
+#include <ctime>
 
 Snake::Snake() {}
 
@@ -22,6 +23,7 @@ Snake::Snake(int x, int y, int direction)
 	{
 		_snake.push_back(new ScreenObject(x - i, y, SNAKE_BODY, direction));
 	}
+	_length = static_cast<int>(this->_snake.size());
 }
 
 Snake::Snake(Snake const & src) {
@@ -46,61 +48,67 @@ std::vector<ScreenObject *>	Snake::getSnake()
 	return this->_snake;
 }
 
-bool	Snake::MoveSnake()
+bool	Snake::MoveSnake(std::vector<std::vector<int>> & map)
 {
-	for(size_t i = 0; i < this->_snake.size(); i++)
+	for(int i = 0; i < _length; i++)
 	{
 		int x = this->_snake[i]->GetX();
 		int y = this->_snake[i]->GetY();
+		map[y][x] = NOTHING;
 		switch(this->_snake[i]->GetDirection())
 		{
 			case UP:
-				x -= 1;
+				y -= 1;
 				break;
 			case DOWN:
-				x += 1;
-				break;
-			case RIGHT:
 				y += 1;
 				break;
+			case RIGHT:
+				x += 1;
+				break;
 			case LEFT:
-				y -= 1;
+				x -= 1;
 				break;
 		}
 		this->_snake[i]->SetY(y);
 		this->_snake[i]->SetX(x);
-		if (i != 0)
-		{
-			if (_snake[i]->GetDirection() != _snake[i - 1]->GetDirection())
-			{
-				_snake[i]->SetDirection(_snake[i - 1]->GetDirection());
-			}
-		}
 	}
-	return ValidMove();
+	return CheckMovement(map);
 }
 
-bool	Snake::ValidMove()
+bool	Snake::CheckMovement(std::vector<std::vector<int>> & map)
 {
-	for(size_t i = 0; i < this->_snake.size(); i++)
+	if (_snake[0]->GetX() >= static_cast<int>(map[0].size()) - 1 || _snake[0]->GetX() < 0)
+		return false;
+	if (_snake[0]->GetY() >= static_cast<int>(map.size()) - 1 || _snake[0]->GetY() < 0)
+		return false;
+	for(int j = 1; j < _length; j++)
 	{
-		for(size_t j = 0; j < this->_snake.size(); j++)
-		{
-			if (j == i) continue;
-			if (_snake[i]->GetY() == _snake[j]->GetY())
-			{
-				if (_snake[i]->GetX() == _snake[j]->GetY())
-				{
-					std::cout << _snake[i]->GetType() << " - " << _snake[j]->GetType() << std::endl;
-					return false;
-				}
-			}
-		}
+		if (_snake[0]->GetX() == _snake[j]->GetX() && _snake[0]->GetY() == _snake[j]->GetY())
+			return false;
+	}
+	for(int i = 0; i < _length; i++)
+	{
+		map[_snake[i]->GetY()][_snake[i]->GetX()] = _snake[i]->GetType();
+	}
+	for(int i = _length - 1; i > 0; i--)
+	{
+		if (i == 0) continue;
+		if (_snake[i]->GetDirection() != _snake[i - 1]->GetDirection())
+			_snake[i]->SetDirection(_snake[i - 1]->GetDirection());
 	}
 	return true;
 }
 
-void	Snake::PrintSnake()
+void	Snake::EatFood()
 {
-
+	int x = _snake[_length - 1]->GetX();
+	int y = _snake[_length - 1]->GetY();
+	int direction = _snake[_length - 1]->GetDirection();
+	if (direction == UP) y += 1;
+	if (direction == DOWN) y -= 1;
+	if (direction == RIGHT) x -= 1;
+	if (direction == LEFT) x += 1;
+	this->_snake.push_back(new ScreenObject(x, y, SNAKE_BODY, direction));
+	_length = static_cast<int>(this->_snake.size());
 }

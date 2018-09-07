@@ -27,12 +27,13 @@ class Snake
 		Snake & operator=(Snake const & src);
 
 		std::vector<ScreenObject *>	getSnake();
-		bool						MoveSnake();
-		void	PrintSnake();
+		bool						MoveSnake(std::vector<std::vector<int>> & map);
+		bool						CheckMovement(std::vector<std::vector<int>> & map);
+		void						EatFood();
 
 	private:
-		bool						ValidMove();
 		std::vector<ScreenObject *> _snake;
+		int							_length;
 };
 
 #endif
