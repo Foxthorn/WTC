@@ -51,7 +51,6 @@ Game & Game::operator=(Game const & src)
 void	Game::Loop()
 {
 	Factory factory(_width, _height);
-	// Factory * factory = new Factory(_width, _height);
 	IFunctions * func = factory.CreateLibrary(SDL);
 	while(_snake->MoveSnake(_map))
 	{
