@@ -16,7 +16,7 @@
 
 Snake::Snake() {}
 
-Snake::Snake(int x, int y, int direction)
+Snake::Snake(int y, int x, int direction)
 {
 	_snake.push_back(new ScreenObject(x, y, SNAKE_HEAD, direction));
 	for(size_t i = 1; i <= 4; i++)

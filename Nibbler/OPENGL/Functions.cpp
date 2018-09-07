@@ -28,3 +28,9 @@ Functions & Functions::operator=(Functions const & src) {
 	return (*this);
 }
 
+void	Functions::Initialise(int width, int height)
+{
+
+}
+
+

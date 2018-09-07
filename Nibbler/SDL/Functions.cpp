@@ -14,7 +14,6 @@
 
 Functions::Functions()
 {
-	std::cout << "SDL CONSTRUCTED" << std::endl;
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
 		throw Error::InitError();
@@ -27,7 +26,6 @@ Functions::Functions(Functions const & src) {
 
 Functions::~Functions()
 {
-	std::cout << "SDL DECONSTRUCTED" << std::endl;
 	SDL_DestroyRenderer(this->_renderer);
 	SDL_DestroyWindow(this->_window);
 	SDL_Quit();
@@ -99,7 +97,6 @@ void	Functions::Initialise(int width, int height)
 	SDL_SetWindowTitle(this->_window, "Nibbler SDL");
 	SDL_SetWindowPosition(this->_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-	std::cout << "Initialise SDL" << std::endl; 
 	this->_width = width;
 	this->_height = height;
 	this->_columns = width / BLOCK_SIZE;

@@ -19,6 +19,9 @@ int	main(int ac, char** av)
 	if (ac != 3) 
 	{
 		std::cout << "Usage: ./nibbler [window: width] [window: height]" << std::endl;
+		std::cout << "Height >= 3 x Width" << std::endl;
+		std::cout << "OR" << std::endl;
+		std::cout << "Width >= 3 x Height" << std::endl;
 		std::cout << "MIN_WIDTH = 100" << std::endl;
 		std::cout << "MIN_HEIGHT = 100" << std::endl;		
 		std::cout << "MAX_WIDTH = 1000" << std::endl;
@@ -28,8 +31,18 @@ int	main(int ac, char** av)
 	{
 		try
 		{
-			int width = std::atoi(av[1]);
-			int height = std::atoi(av[2]);
+			double width = std::atof(av[1]);
+			double height = std::atof(av[2]);
+			if (width > height)
+			{
+				if (width / height >= 1.95)
+					throw Error::ArgumentsException();
+			}
+			if (width < height) 
+			{
+				if (height / width >= 1.95)
+					throw Error::ArgumentsException();
+			}
 			if (width >= 100 && height >= 100 && width <= 1000 && height <= 800) {
 				Game game(width, height);
 				game.Loop();

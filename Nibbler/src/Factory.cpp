@@ -19,7 +19,6 @@ Factory::Factory(Factory const & src) {
 
 Factory::Factory(int width, int height) : _width(width), _height(height)
 {
-	std::cout << "Create Factory" << std::endl;
 	this->_currentLibrary = SDL;
 	CreateSDL();
 }
@@ -32,15 +31,14 @@ Factory::~Factory()
 
 IFunctions *Factory::CreateLibrary(int library)
 {
-	// if (library == _currentLibrary)
-	// {
-	// 	return (_graphicsInstance);
-	// }
-	// else
-	// {
+	if (library == _currentLibrary)
+	{
+		return (_graphicsInstance);
+	}
+	else
+	{
 		CloseLibrary(_graphicsInstance);
-	// }
-	std::cout << "Create Library " << library << std::endl;
+	}
 
 	switch(library)
 	{
@@ -78,7 +76,6 @@ void		Factory::CloseLibrary(IFunctions * graphicsInstance)
 
 IFunctions * Factory::CreateSDL()
 {
-	std::cout << "SDL" << std::endl;
 	_dlHandle = dlopen("sdl/libsdl.dylib", RTLD_LAZY);
 	if (!_dlHandle)
 	{
@@ -101,7 +98,6 @@ IFunctions * Factory::CreateSDL()
 
 IFunctions * Factory::CreateSFML()
 {
-	std::cout << "SFML" << std::endl;
 	_dlHandle = dlopen("sfml/libsfml.dylib", RTLD_LAZY);
 	if (!_dlHandle)
 	{

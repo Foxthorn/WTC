@@ -13,9 +13,7 @@
 #include "Functions.hpp"
 
 Functions::Functions() 
-{
-	std::cout << "SFML CONSTRUCTED" << std::endl;
-}
+{}
 
 Functions::Functions(Functions const & src) {
 	*this = src;	
@@ -23,7 +21,6 @@ Functions::Functions(Functions const & src) {
 
 Functions::~Functions() 
 {
-	std::cout << "SFML DECONSTRUCTED" << std::endl;
 	this->_window->close();
 	delete this->_window;
 }
@@ -43,8 +40,6 @@ Functions & Functions::operator=(Functions const & src) {
 
 void	Functions::Initialise(int width, int height)
 {
-	std::cout << "Initialise SFML" << std::endl; 
-
 	this->_width = width;
 	this->_height = height;
 	this->_columns = width / BLOCK_SIZE;

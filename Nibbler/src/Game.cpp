@@ -23,6 +23,8 @@ Game::Game(int width, int height) : _width(width), _height(height)
 {
 	this->_columns = width / BLOCK_SIZE;
 	this->_rows = height / BLOCK_SIZE;
+	std::cout << _rows << std::endl;
+	std::cout << _columns << std::endl;
 	this->_snake = new Snake(_rows / 2, _columns / 2, RIGHT);
 	std::vector<int> temp;
 	for(int i = 0; i <= this->_columns; i++) 
@@ -52,6 +54,11 @@ void	Game::Loop()
 {
 	Factory factory(_width, _height);
 	IFunctions * func = factory.CreateLibrary(SDL);
+	func->Render(_map);
+	while(func->Key() == Keys::NO_KEY)
+	{
+		func->Event();
+	}
 	while(_snake->MoveSnake(_map))
 	{
 		if (func->Event())
