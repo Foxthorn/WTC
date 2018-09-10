@@ -58,6 +58,7 @@ void	Game::Loop()
 	int decrease = 0;
 	while(_snake->MoveSnake(_map))
 	{
+		bool swapped = false;
 		if (func->Event())
 		{
 			if (func->Close())
@@ -81,6 +82,7 @@ void	Game::Loop()
 				{
 					func = factory.CreateLibrary(OPENGL);
 				}
+				swapped = true;
 			}
 			else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
 			{
@@ -92,7 +94,7 @@ void	Game::Loop()
 		func->Render(_map);
 		int time_taken = CheckFood();
 		UpdateMap();
-		if (time_taken == 0)
+		if (time_taken == 0 && !swapped)
 			func->Sleep(sleep - decrease);
 	}
 	while(func->Key() == Keys::NO_KEY)

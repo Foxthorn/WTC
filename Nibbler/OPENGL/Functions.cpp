@@ -25,6 +25,8 @@ Functions::Functions(Functions const & src) {
 
 Functions::~Functions() 
 {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwDestroyWindow(this->_window);
 	glfwTerminate();
 }
 
@@ -59,15 +61,6 @@ bool	Functions::Event()
 
 void	Functions::Draw(int x, int y, float r, float g, float b)
 {
-	// glColor3f(r / 255, g / 255, b / 255);
-	 
-	// glBegin(GL_QUADS);
-	// glVertex2i(col, row);
-	// glVertex2i(col, row + BLOCK_SIZE);
-	// glVertex2i(col - BLOCK_SIZE, row + BLOCK_SIZE);
-	// glVertex2i(col - BLOCK_SIZE, row);
-	// glEnd();
-
 	glColor3f(static_cast<float>(r) / 255, static_cast<float>(g) / 255, static_cast<float>(b) / 255);
 	float xf = static_cast<float>(x - static_cast<int>(this->_width >> 1)) / static_cast<float>(this->_width >> 1);
 	float yf = static_cast<float>(static_cast<int>(this->_height >> 1) - y) / static_cast<float>(this->_height >> 1);
