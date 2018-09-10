@@ -34,7 +34,7 @@ class Game {
 		int		PlaceFood();
 		void	PlaceSnake();
 		bool	MoveSnake();
-		int	CheckFood();
+		int		CheckFood();
 		void	ChangeSnakeDirection(int direction);
 		void	Loop();
 
