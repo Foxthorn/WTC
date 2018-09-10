@@ -19,7 +19,7 @@ Snake::Snake() {}
 Snake::Snake(int y, int x, int direction)
 {
 	_snake.push_back(new ScreenObject(x, y, SNAKE_HEAD, direction));
-	for(size_t i = 1; i <= 4; i++)
+	for(size_t i = 1; i < 4; i++)
 	{
 		_snake.push_back(new ScreenObject(x - i, y, SNAKE_BODY, direction));
 	}
@@ -111,4 +111,9 @@ void	Snake::EatFood()
 	if (direction == LEFT) x += 1;
 	this->_snake.push_back(new ScreenObject(x, y, SNAKE_BODY, direction));
 	_length = static_cast<int>(this->_snake.size());
+}
+
+int		Snake::GetLength()
+{
+	return this->_length;
 }

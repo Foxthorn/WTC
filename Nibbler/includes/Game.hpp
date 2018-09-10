@@ -26,23 +26,26 @@ class Game {
 	public:
 		Game();
 		Game(Game const & src);
-		Game(int width, int height);
+		Game(int width, int height, int library);
 		~Game();
 		Game & operator=(Game const & src);
 
 		void	PrintMap();
-		void	PlaceFood();
+		int		PlaceFood();
 		void	PlaceSnake();
 		bool	MoveSnake();
-		void	CheckFood();
+		int	CheckFood();
 		void	ChangeSnakeDirection(int direction);
 		void	Loop();
 
 	private:
+		bool							ValidFood(int x, int y);
+		void							UpdateMap();
 		int								_width;
 		int								_height;
 		int								_columns;
 		int								_rows;
+		int								_start_library;
 		Snake							*_snake;
 		ScreenObject					_food;
 		std::vector<std::vector<int>> 	_map;

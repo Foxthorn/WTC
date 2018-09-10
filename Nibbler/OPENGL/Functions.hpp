@@ -21,7 +21,7 @@ class Functions : public IFunctions
 	public:
 		Functions();
 		Functions(Functions const & src);
-		~Functions();
+		virtual ~Functions();
 		Functions & operator=(Functions const & src);
 
 		virtual void	Initialise(int width, int height);

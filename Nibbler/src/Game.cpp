@@ -19,13 +19,12 @@ Game::Game(Game const & src)
 	*this = src;	
 }
 
-Game::Game(int width, int height) : _width(width), _height(height)
+Game::Game(int width, int height, int library) : _width(width), _height(height)
 {
 	this->_columns = width / BLOCK_SIZE;
 	this->_rows = height / BLOCK_SIZE;
-	std::cout << _rows << std::endl;
-	std::cout << _columns << std::endl;
 	this->_snake = new Snake(_rows / 2, _columns / 2, RIGHT);
+	this->_start_library = library;
 	std::vector<int> temp;
 	for(int i = 0; i <= this->_columns; i++) 
 	{
@@ -52,15 +51,12 @@ Game & Game::operator=(Game const & src)
 
 void	Game::Loop()
 {
-	Factory factory(_width, _height);
-	IFunctions * func = factory.CreateLibrary(SDL);
+	Factory factory(_width, _height, this->_start_library);
+	IFunctions * func = factory.CreateLibrary(this->_start_library);
 	func->Render(_map);
-	while(func->Key() == Keys::NO_KEY)
-	{
-		func->Event();
-	}
+	int sleep = 80;
+	int decrease = 0;
 	while(_snake->MoveSnake(_map))
-	// while(true)
 	{
 		if (func->Event())
 		{
@@ -90,23 +86,33 @@ void	Game::Loop()
 			{
 				ChangeSnakeDirection(func->Key());
 			}
+			if (_snake->GetLength() <= 70)
+				decrease = _snake->GetLength();
 		}
 		func->Render(_map);
-		func->Sleep(100);
-		CheckFood();
+		int time_taken = CheckFood();
+		UpdateMap();
+		if (time_taken == 0)
+			func->Sleep(sleep - decrease);
+	}
+	while(func->Key() == Keys::NO_KEY)
+	{
+		func->Event();
 	}
 	factory.CloseLibrary(func);
-	
+	std::cout << "Score: " << this->_snake->GetLength() - 4 << std::endl;
+	std::cout << "GAME OVER" << std::endl;
 }
 
-void	Game::CheckFood()
+int		Game::CheckFood()
 {
 	auto snake = _snake->getSnake();
 	if (_food.GetX() == snake[0]->GetX() && _food.GetY() == snake[0]->GetY())
 	{
 		_snake->EatFood();
-		PlaceFood();
+		return PlaceFood();
 	}
+	return 0;
 }
 
 void	Game::PrintMap()
@@ -121,23 +127,35 @@ void	Game::PrintMap()
 	}
 }
 
-void	Game::PlaceFood()
+int		Game::PlaceFood()
 {
+	int start = time(NULL);
 	srand(time(NULL));
 	int x = rand() % _columns;
 	int y = rand() % _rows;
-	while(_map[y][x] != NOTHING)
+	while(ValidFood(x, y))
 	{
 		srand(time(NULL));
 		x = rand() % _columns;
 		y = rand() % _rows;
 	}
-
 	_food.SetY(y);
 	_food.SetX(x);
 	_food.SetType(FOOD);
 
 	_map[y][x] = FOOD;
+	int end = time(NULL);
+	return end - start;
+}
+
+bool	Game::ValidFood(int x, int y)
+{
+	auto snake = this->_snake->getSnake();
+	if (_map[y][x] == SNAKE_BODY || _map[y][x] == SNAKE_HEAD)
+		return true;
+	if (x >= _columns || y >= _rows)
+		return true;
+	return false;
 }
 
 void	Game::PlaceSnake()
@@ -149,6 +167,20 @@ void	Game::PlaceSnake()
 		int y = display_snake[i]->GetY();
 		_map[y][x] = display_snake[i]->GetType();
 	}
+}
+
+void	Game::UpdateMap()
+{
+	auto snake = this->_snake->getSnake();
+	for (size_t s = 0; s < snake.size(); s++)
+	{ 
+		int x = snake[s]->GetX();
+		int y = snake[s]->GetY();
+		_map[y][x] = snake[s]->GetType();
+	}
+	int x = _food.GetX();
+	int y = _food.GetY();
+	_map[y][x] = FOOD;
 }
 
 void	Game::ChangeSnakeDirection(int direction)

@@ -17,10 +17,18 @@ Factory::Factory(Factory const & src) {
 	*this = src;	
 }
 
-Factory::Factory(int width, int height) : _width(width), _height(height)
+Factory::Factory(int width, int height, int library) : _width(width), _height(height)
 {
-	this->_currentLibrary = SDL;
-	CreateSDL();
+	this->_currentLibrary = library;
+	switch (library)
+	{
+		case 0:
+			CreateSDL();
+		case 1:
+			CreateSFML();
+		case 2:
+			CreateOpenGL();
+	}
 }
 
 Factory::~Factory()

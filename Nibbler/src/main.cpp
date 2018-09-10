@@ -16,14 +16,15 @@
 
 int	main(int ac, char** av)
 {
-	if (ac != 3) 
+	if (ac != 4) 
 	{
-		std::cout << "Usage: ./nibbler [window: width] [window: height]" << std::endl;
-		std::cout << "Height >= 3 x Width" << std::endl;
+		std::cout << "Usage: ./nibbler [window: width] [window: height] [Library]" << std::endl;
+		std::cout << "SDL: 0, SFML: 1, OPENGL: 2" << std::endl;
+		std::cout << "Height < 2 x Width" << std::endl;
 		std::cout << "OR" << std::endl;
-		std::cout << "Width >= 3 x Height" << std::endl;
-		std::cout << "MIN_WIDTH = 100" << std::endl;
-		std::cout << "MIN_HEIGHT = 100" << std::endl;		
+		std::cout << "Width < 2 x Height" << std::endl;
+		std::cout << "MIN_WIDTH = 200" << std::endl;
+		std::cout << "MIN_HEIGHT = 200" << std::endl;		
 		std::cout << "MAX_WIDTH = 1000" << std::endl;
 		std::cout << "MAX_HEIGHT = 800" << std::endl;
 	}
@@ -33,6 +34,7 @@ int	main(int ac, char** av)
 		{
 			double width = std::atof(av[1]);
 			double height = std::atof(av[2]);
+			int library = std::atoi(av[3]);
 			if (width > height)
 			{
 				if (width / height >= 1.95)
@@ -43,8 +45,12 @@ int	main(int ac, char** av)
 				if (height / width >= 1.95)
 					throw Error::ArgumentsException();
 			}
-			if (width >= 100 && height >= 100 && width <= 1000 && height <= 800) {
-				Game game(width, height);
+			if (library > 2 || library < 0)
+			{
+				throw Error::ArgumentsException();
+			}
+			if (width >= 200 && height >= 200 && width <= 1000 && height <= 800) {
+				Game game(width, height, library);
 				game.Loop();
 			}
 			else

@@ -21,7 +21,7 @@
 class Factory {
 	public:
 		Factory();
-		Factory(int width, int height);
+		Factory(int width, int height, int library);
 		Factory(Factory const & src);
 		~Factory();
 		Factory & operator=(Factory const & src);

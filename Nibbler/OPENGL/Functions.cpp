@@ -138,7 +138,7 @@ Keys	Functions::Key()
 
 void	Functions::Sleep(int sleep)
 {
-	int updated = sleep * 500;
+	int updated = sleep * 1000;
 	usleep(updated);
 }
 
