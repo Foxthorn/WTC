@@ -14,6 +14,7 @@
 # define	FUNCTIONS_HPP
 
 #include "../includes/IFunctions.hpp"
+#include <GLFW/glfw3.h>
 
 class Functions : public IFunctions
 {
@@ -30,8 +31,12 @@ class Functions : public IFunctions
 		virtual bool	Close();
 		virtual void	Render(std::vector<std::vector<int>> & map);
 	private:
-
-	protected:
+		void			Draw(int row, int col, float r, float g, float b);
+		GLFWwindow*		_window;
+		int				_columns;
+		int				_rows;
+		int				_width;
+		int				_height;
 
 };
 

@@ -84,11 +84,7 @@ void		Functions::Render(std::vector<std::vector<int>> & map)
 }
 
 void	Functions::Initialise(int width, int height)
-{
-	// if (SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_FULLSCREEN, &this->_window, &this->_renderer) == -1) 
-	// {
-	// 	throw Error::CreateWindowException();
-	// }		
+{	
 	if (SDL_CreateWindowAndRenderer(width, height, 0, &this->_window, &this->_renderer) == -1) 
 	{
 		throw Error::CreateWindowException();
