@@ -38,7 +38,14 @@ Game::Game(int width, int height, int library) : _width(width), _height(height)
 	PlaceFood();
 }
 
-Game::~Game() {}
+Game::~Game() 
+{
+	for(size_t i = 0; i < _map.size(); i++)
+	{
+		_map[i].clear();
+	}
+	_map.clear();
+}
 
 Game & Game::operator=(Game const & src) 
 {

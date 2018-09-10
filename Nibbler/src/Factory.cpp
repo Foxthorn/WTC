@@ -19,15 +19,20 @@ Factory::Factory(Factory const & src) {
 
 Factory::Factory(int width, int height, int library) : _width(width), _height(height)
 {
-	this->_currentLibrary = library;
 	switch (library)
 	{
-		case 0:
+		case SDL:
 			CreateSDL();
-		case 1:
+			this->_currentLibrary = SDL;
+			break;
+		case SFML:
 			CreateSFML();
-		case 2:
+			this->_currentLibrary = SFML;
+			break;
+		case OPENGL:
 			CreateOpenGL();
+			this->_currentLibrary = OPENGL;
+			break;
 	}
 }
 
