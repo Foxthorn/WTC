@@ -40,4 +40,7 @@ class Functions : public IFunctions
 
 };
 
+extern "C" Functions * createFunctions();
+extern "C" void deleteFunctions(Functions * func);
+
 #endif

@@ -46,6 +46,8 @@ IFunctions *Factory::CreateLibrary(int library)
 			return CreateSDL();
 		case SFML:
 			return CreateSFML();
+		case OPENGL:
+			return CreateOpenGL();
 		default:
 			return NULL;
 	}
@@ -107,6 +109,28 @@ IFunctions * Factory::CreateSFML()
 	_currentLibrary = SFML;
 
 	IFunctions *(*create)(void);
+	create = (IFunctions *(*)())dlsym(_dlHandle, "createFunctions");
+	if (!create)
+	{
+		throw Error::DLError();
+	}
+
+	this->_graphicsInstance = create();
+	this->_graphicsInstance->Initialise(_width, _height);
+	return this->_graphicsInstance;
+}
+
+IFunctions * Factory::CreateOpenGL()
+{
+	_dlHandle = dlopen("opengl/libog.dylib", RTLD_LAZY);
+	if (!_dlHandle)
+	{
+		throw Error::OpeningDLException();
+	}
+
+	_currentLibrary = OPENGL;
+
+		IFunctions *(*create)(void);
 	create = (IFunctions *(*)())dlsym(_dlHandle, "createFunctions");
 	if (!create)
 	{

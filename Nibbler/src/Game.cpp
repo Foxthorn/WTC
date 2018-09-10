@@ -60,6 +60,7 @@ void	Game::Loop()
 		func->Event();
 	}
 	while(_snake->MoveSnake(_map))
+	// while(true)
 	{
 		if (func->Event())
 		{
@@ -71,7 +72,7 @@ void	Game::Loop()
 			{
 				break;
 			}
-			else if (func->Key() == KEY_1 || func->Key() == KEY_2)
+			else if (func->Key() == KEY_1 || func->Key() == KEY_2 || func->Key() == KEY_3)
 			{
 				if (func->Key() == KEY_1) {
 					func = factory.CreateLibrary(SDL);
@@ -80,6 +81,10 @@ void	Game::Loop()
 				{
 					func = factory.CreateLibrary(SFML);
 				} 
+				if (func->Key() == KEY_3)
+				{
+					func = factory.CreateLibrary(OPENGL);
+				}
 			}
 			else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
 			{

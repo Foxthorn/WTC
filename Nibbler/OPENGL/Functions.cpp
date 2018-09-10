@@ -38,7 +38,7 @@ Functions & Functions::operator=(Functions const & src) {
 
 void	Functions::Initialise(int width, int height)
 {
-	this->_window = glfwCreateWindow(width, height, "Nibbler OPENGL", glfwGetPrimaryMonitor(), NULL);
+	this->_window = glfwCreateWindow(width, height, "Nibbler OPENGL", NULL, NULL);
 	if (!_window) throw Error::CreateWindowException();
 
 	glfwMakeContextCurrent(_window);
@@ -57,9 +57,29 @@ bool	Functions::Event()
 	return false;
 }
 
-void	Functions::Draw(int row, int col, float r, float g, float b)
+void	Functions::Draw(int x, int y, float r, float g, float b)
 {
-	glColor3f(r / 255, g / 255, b / 255);
+	// glColor3f(r / 255, g / 255, b / 255);
+	 
+	// glBegin(GL_QUADS);
+	// glVertex2i(col, row);
+	// glVertex2i(col, row + BLOCK_SIZE);
+	// glVertex2i(col - BLOCK_SIZE, row + BLOCK_SIZE);
+	// glVertex2i(col - BLOCK_SIZE, row);
+	// glEnd();
+
+	glColor3f(static_cast<float>(r) / 255, static_cast<float>(g) / 255, static_cast<float>(b) / 255);
+	float xf = static_cast<float>(x - static_cast<int>(this->_width >> 1)) / static_cast<float>(this->_width >> 1);
+	float yf = static_cast<float>(static_cast<int>(this->_height >> 1) - y) / static_cast<float>(this->_height >> 1);
+	float xf1 = static_cast<float>(x + BLOCK_SIZE - static_cast<int>(this->_width >> 1)) / static_cast<float>(this->_width >> 1);
+	float yf1 = static_cast<float>(static_cast<int>(this->_height >> 1) - y - BLOCK_SIZE) / static_cast<float>(this->_height >> 1);
+
+	glBegin(GL_QUADS);
+	glVertex2f(xf1, yf);
+	glVertex2f(xf, yf);
+	glVertex2f(xf, yf1);
+	glVertex2f(xf1, yf1);
+	glEnd();
 }
 
 void	Functions::Render(std::vector<std::vector<int>> & map)
@@ -77,18 +97,19 @@ void	Functions::Render(std::vector<std::vector<int>> & map)
 		{
 			if (map[row][col] == SNAKE_BODY)
 			{
-				Draw(row * BLOCK_SIZE, col * BLOCK_SIZE, 255, 0, 0);
+				Draw(col * BLOCK_SIZE, row * BLOCK_SIZE, 255, 0, 0);
 			}
 			else if (map[row][col] == SNAKE_HEAD)
 			{
-
+				Draw(col * BLOCK_SIZE, row * BLOCK_SIZE, 0, 255, 0);
 			}
 			else if (map[row][col] == FOOD)
 			{
-
+				Draw(col * BLOCK_SIZE, row * BLOCK_SIZE, 0, 0, 255);
 			}
 		}
 	}
+	glfwSwapBuffers(this->_window);
 }
 
 Keys	Functions::Key()
@@ -117,7 +138,8 @@ Keys	Functions::Key()
 
 void	Functions::Sleep(int sleep)
 {
-	usleep(sleep);
+	int updated = sleep * 500;
+	usleep(updated);
 }
 
 bool	Functions::Close()
@@ -129,3 +151,12 @@ bool	Functions::Close()
 	return false;
 }
 
+Functions * createFunctions()
+{
+	return new Functions();
+}
+
+void deleteFunctions(Functions * func)
+{
+	delete func;
+}
