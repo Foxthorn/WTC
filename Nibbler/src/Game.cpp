@@ -61,8 +61,12 @@ void	Game::Loop()
 	Factory factory(_width, _height, this->_start_library);
 	IFunctions * func = factory.CreateLibrary(this->_start_library);
 	func->Render(_map);
-	int sleep = 80;
+	int sleep = 100;
 	int decrease = 0;
+	while(func->Key() == Keys::NO_KEY)
+	{
+		func->Event();
+	}
 	while(_snake->MoveSnake(_map))
 	{
 		bool swapped = false;
@@ -181,14 +185,23 @@ void	Game::PlaceSnake()
 void	Game::UpdateMap()
 {
 	auto snake = this->_snake->getSnake();
-	for (size_t s = 0; s < snake.size(); s++)
-	{ 
-		int x = snake[s]->GetX();
-		int y = snake[s]->GetY();
-		_map[y][x] = snake[s]->GetType();
+	int x = snake[snake.size() - 1]->GetX();
+	int y = snake[snake.size() - 1]->GetY();
+	for(int i = x - 1; i <= x + 1; i++)
+	{
+		for (int j = y - 1; j <= y + 1; j++)
+		{
+			if (static_cast<size_t>(j) < _map.size() && static_cast<size_t>(i) < _map[j].size())
+			{
+				if (_map[j][i] != NOTHING)
+				{
+					_map[j][i] = NOTHING;
+				}
+			}
+		}
 	}
-	int x = _food.GetX();
-	int y = _food.GetY();
+	x = _food.GetX();
+	y = _food.GetY();
 	_map[y][x] = FOOD;
 }
 

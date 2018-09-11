@@ -50,11 +50,10 @@ std::vector<ScreenObject *>	Snake::getSnake()
 
 bool	Snake::MoveSnake(std::vector<std::vector<int>> & map)
 {
-	for(int i = 0; i < _length; i++)
+	for(size_t i = 0; i < _snake.size(); i++)
 	{
 		int x = this->_snake[i]->GetX();
 		int y = this->_snake[i]->GetY();
-		map[y][x] = NOTHING;
 		switch(this->_snake[i]->GetDirection())
 		{
 			case UP:
