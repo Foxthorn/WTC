@@ -52,4 +52,9 @@ class Game {
 
 };
 
+struct s_point {
+	size_t x;
+	size_t y;
+};
+
 #endif

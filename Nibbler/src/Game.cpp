@@ -61,7 +61,7 @@ void	Game::Loop()
 	Factory factory(_width, _height, this->_start_library);
 	IFunctions * func = factory.CreateLibrary(this->_start_library);
 	func->Render(_map);
-	int sleep = 100;
+	int sleep = 80;
 	int decrease = 0;
 	while(func->Key() == Keys::NO_KEY)
 	{
@@ -142,16 +142,25 @@ void	Game::PrintMap()
 
 int		Game::PlaceFood()
 {
-	int start = time(NULL);
 	srand(time(NULL));
-	int x = rand() % _columns;
-	int y = rand() % _rows;
-	while(ValidFood(x, y))
+	int start = time(NULL);
+	std::vector<s_point> points;
+	for(size_t y = 0; y < _map.size(); y++)
 	{
-		srand(time(NULL));
-		x = rand() % _columns;
-		y = rand() % _rows;
+		for(size_t x = 0; x < _map[y].size(); x++)
+		{
+			s_point point;
+			if (_map[y][x] == NOTHING && !ValidFood(x, y))
+			{
+				point.x = x;
+				point.y = y;
+				points.push_back(point);
+			}
+		}
 	}
+	int i = rand() % points.size();
+	int x = static_cast<int>(points[i].x);
+	int y = static_cast<int>(points[i].y);
 	_food.SetY(y);
 	_food.SetX(x);
 	_food.SetType(FOOD);
