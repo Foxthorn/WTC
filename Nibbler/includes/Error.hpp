@@ -67,7 +67,20 @@ class Error
                 return "Exception:: Invalid Arguments";
             }
         };
-        
+        class ResolutionException : public std::exception
+        {
+            virtual const char* what() const throw()
+            {
+                return "Exception:: Invalid Resolution";
+            }
+        };
+        class LibraryException : public std::exception
+        {
+            virtual const char* what() const throw()
+            {
+                return "Exception:: Invalid Library";
+            }
+        };
 };
 
 #endif
