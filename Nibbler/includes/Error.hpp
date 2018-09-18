@@ -81,6 +81,13 @@ class Error
                 return "Exception:: Invalid Library";
             }
         };
+        class GAMEOVER : public std::exception
+        {
+            virtual const char* what() const throw()
+            {
+                return "YOU HAVE WON SNAKE";
+            }
+        };
 };
 
 #endif

@@ -19,7 +19,8 @@ enum GameObject
     BOUNDRY = 1,
     FOOD = 2,
     SNAKE_HEAD = 3,
-    SNAKE_BODY = 4
+    SNAKE_BODY = 4,
+    SPECIAL_FOOD = 5
 };
 
 #endif

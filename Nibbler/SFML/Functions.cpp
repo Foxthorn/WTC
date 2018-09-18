@@ -91,6 +91,13 @@ void	Functions::Render(std::vector<std::vector<int>> & map)
 				color.b = 0;
 				drawn = true;
 			}
+			else if (map[row][col] == SPECIAL_FOOD)
+			{
+				color.r = 255;
+				color.g = 0;
+				color.b = 0;
+				drawn = true;
+			}
 			if (drawn)
 			{
 				block.setPosition(static_cast<float>(col * BLOCK_SIZE), static_cast<float>(row * BLOCK_SIZE));
@@ -112,37 +119,24 @@ Keys	Functions::Key()
 {
 	if (this->_event.type == sf::Event::KeyPressed)
 	{
-		if (this->_event.key.code == sf::Keyboard::Up)
+		switch(this->_event.key.code)
 		{
-			return Keys::UP_KEY;
-		}
-		else if (this->_event.key.code == sf::Keyboard::Down)
-		{
-			return Keys::DOWN_KEY;
-		}
-		else if (this->_event.key.code == sf::Keyboard::Right)
-		{
-			return Keys::RIGHT_KEY;
-		} 
-		else if (this->_event.key.code == sf::Keyboard::Left)
-		{
-			return Keys::LEFT_KEY;
-		} 
-		else if (this->_event.key.code == sf::Keyboard::Escape)
-		{
-			return Keys::ESC_KEY;
-		} 
-		else if (this->_event.key.code == sf::Keyboard::Num1)
-		{
-			return Keys::KEY_1;
-		} 
-		else if (this->_event.key.code == sf::Keyboard::Num2)
-		{
-			return Keys::KEY_2;
-		} 
-		else if (this->_event.key.code == sf::Keyboard::Num3)
-		{
-			return Keys::KEY_3;
+			case sf::Keyboard::Up:
+				return Keys::UP_KEY;
+			case sf::Keyboard::Down:
+				return Keys::DOWN_KEY;
+			case sf::Keyboard::Right:
+				return Keys::RIGHT_KEY;
+			case sf::Keyboard::Left:
+				return Keys::LEFT_KEY;
+			case sf::Keyboard::Escape:
+				return Keys::ESC_KEY;
+			case sf::Keyboard::Num1:
+				return Keys::KEY_1;
+			case sf::Keyboard::Num2:
+				return Keys::KEY_2;
+			case sf::Keyboard::Num3:
+				return Keys::KEY_3;
 		}
 	}
 	return Keys::NO_KEY;

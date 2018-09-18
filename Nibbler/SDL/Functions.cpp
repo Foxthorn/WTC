@@ -72,6 +72,11 @@ void		Functions::Render(std::vector<std::vector<int>> & map)
 				SDL_SetRenderDrawColor(this->_renderer, 0, 255, 255, 0);
 				drawn = true;
 			}
+			else if (map[row][col] == SPECIAL_FOOD)
+			{
+				SDL_SetRenderDrawColor(this->_renderer, 255, 223, 0, 0);
+				drawn = true;
+			}
 			if (drawn)
 			{
 				block.x = col * BLOCK_SIZE;
@@ -112,37 +117,24 @@ Keys	Functions::Key()
 {
 	if (this->_event.type == SDL_KEYDOWN) 
 	{
-		if (this->_event.key.keysym.sym == SDLK_UP)
+		switch(this->_event.key.keysym.sym)
 		{
-			return Keys::UP_KEY;
-		}
-		else if (this->_event.key.keysym.sym == SDLK_DOWN)
-		{
-			return Keys::DOWN_KEY;
-		}
-		else if (this->_event.key.keysym.sym == SDLK_RIGHT)
-		{
-			return Keys::RIGHT_KEY;
-		} 
-		else if (this->_event.key.keysym.sym == SDLK_LEFT)
-		{
-			return Keys::LEFT_KEY;
-		} 
-		else if (this->_event.key.keysym.sym == SDLK_ESCAPE)
-		{
-			return Keys::ESC_KEY;
-		} 
-		else if (this->_event.key.keysym.sym == SDLK_1)
-		{
-			return Keys::KEY_1;
-		} 
-		else if (this->_event.key.keysym.sym == SDLK_2)
-		{
-			return Keys::KEY_2;
-		} 
-		else if (this->_event.key.keysym.sym == SDLK_3)
-		{
-			return Keys::KEY_3;
+			case SDLK_UP:
+				return Keys::UP_KEY;
+			case SDLK_DOWN:
+				return Keys::DOWN_KEY;
+			case SDLK_RIGHT:
+				return Keys::RIGHT_KEY;
+			case SDLK_LEFT:
+				return Keys::LEFT_KEY;
+			case SDLK_ESCAPE:
+				return Keys::ESC_KEY;
+			case SDLK_1:
+				return Keys::KEY_1;
+			case SDLK_2:
+				return Keys::KEY_2;		
+			case SDLK_3:
+				return Keys::KEY_3;		
 		}
 	}
 	return Keys::NO_KEY;

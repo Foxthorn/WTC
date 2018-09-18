@@ -100,6 +100,10 @@ void	Functions::Render(std::vector<std::vector<int>> & map)
 			{
 				Draw(col * BLOCK_SIZE, row * BLOCK_SIZE, 0, 0, 255);
 			}
+			else if (map[row][col] == SPECIAL_FOOD)
+			{
+				Draw(col * BLOCK_SIZE, row * BLOCK_SIZE, 255, 223, 0);
+			}
 		}
 	}
 	glfwSwapBuffers(this->_window);

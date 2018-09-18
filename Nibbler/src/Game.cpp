@@ -58,6 +58,7 @@ Game & Game::operator=(Game const & src)
 
 void	Game::Loop()
 {
+	InitSpecialFood();
 	Factory factory(_width, _height, this->_start_library);
 	IFunctions * func = factory.CreateLibrary(this->_start_library);
 	func->Render(_map);
@@ -76,44 +77,59 @@ void	Game::Loop()
 			{
 				break;
 			}
-			else if (func->Key() == ESC_KEY)
+			switch (func->Key())
 			{
-				break;
-			}
-			else if (func->Key() == KEY_1 || func->Key() == KEY_2 || func->Key() == KEY_3)
-			{
-				if (func->Key() == KEY_1) {
+				case ESC_KEY:
+					factory.CloseLibrary(func);
+					DisplayScore();
+					return;
+				case KEY_1:
 					func = factory.CreateLibrary(SDL);
-				}
-				if (func->Key() == KEY_2)
-				{
+					swapped = true;
+					break;
+				case KEY_2:
 					func = factory.CreateLibrary(SFML);
-				} 
-				if (func->Key() == KEY_3)
-				{
+					swapped = true;
+					break;
+				case KEY_3:
 					func = factory.CreateLibrary(OPENGL);
-				}
-				swapped = true;
-			}
-			else if (func->Key() == UP_KEY || func->Key() == DOWN_KEY || func->Key() == RIGHT_KEY || func->Key() == LEFT_KEY)
-			{
-				ChangeSnakeDirection(func->Key());
+					swapped = true;
+					break;
+				case UP_KEY:
+					ChangeSnakeDirection(func->Key());
+					break;
+				case DOWN_KEY:
+					ChangeSnakeDirection(func->Key());
+					break;
+				case RIGHT_KEY:
+					ChangeSnakeDirection(func->Key());
+					break;
+				case LEFT_KEY:
+					ChangeSnakeDirection(func->Key());
+					break;
+				case NO_KEY:
+					break;
 			}
 			if (_snake->GetLength() <= 70)
 				decrease = _snake->GetLength();
 		}
 		func->Render(_map);
+		CheckSpecialFood();
 		int time_taken = CheckFood();
 		UpdateMap();
 		if (time_taken == 0 && !swapped)
 			func->Sleep(sleep - decrease);
 	}
-	while(func->Key() == Keys::NO_KEY)
-	{
-		func->Event();
-	}
 	factory.CloseLibrary(func);
-	std::cout << "Score: " << this->_snake->GetLength() - 4 << std::endl;
+	DisplayScore();
+}
+
+void	Game::DisplayScore()
+{
+	std::cout << "Food:		" << this->_snake->GetLength() - _num_special_food - 4 << std::endl;
+	std::cout << "Special Food :	" << _num_special_food << " * 10" << std::endl;
+	std::cout << "		_________ +" << std::endl;
+	std::cout << "Final Score :	" << (this->_snake->GetLength() - _num_special_food - 4) + (_num_special_food  * 10) << std::endl;
 	std::cout << "GAME OVER" << std::endl;
 }
 
@@ -125,7 +141,80 @@ int		Game::CheckFood()
 		_snake->EatFood();
 		return PlaceFood();
 	}
+	if (_special_food.food.GetX() == snake[0]->GetX() && _special_food.food.GetY() == snake[0]->GetY())
+	{
+		_special_food.active = false;
+		_snake->EatFood();
+		_num_special_food += 1;
+		return 0;
+	}
 	return 0;
+}
+
+void	Game::InitSpecialFood()
+{
+	_special_food.active = false;
+	_special_food.time_left = 0;
+	_num_special_food = 0;
+}
+
+void	Game::CheckSpecialFood()
+{
+	if (_special_food.active == true)
+	{
+		_special_food.time_left -= 1;
+		if (_special_food.time_left == 0)
+		{
+			_special_food.active = false;
+		}
+	}
+	else
+	{
+		int rng = rand() % 100;
+		if (rng >= 98)
+		{
+			_special_food.active = true;
+			if (_height > _width) 
+				_special_food.time_left = _height / 10;
+			else
+				_special_food.time_left = _width / 10;
+			PlaceSpecialFood();
+		}
+	}
+}
+
+void	Game::PlaceSpecialFood()
+{
+	std::vector<s_point> points;
+	for(size_t y = 0; y < _map.size(); y++)
+	{
+		for(size_t x = 0; x < _map[y].size(); x++)
+		{
+			s_point point;
+			if (ValidFood(x, y))
+			{
+				point.x = x;
+				point.y = y;
+				points.push_back(point);
+			}
+		}
+	}
+	if (points.size() > 0) 
+	{
+		int i = rand() % points.size();
+		int x = static_cast<int>(points[i].x);
+		int y = static_cast<int>(points[i].y);
+		_special_food.food.SetY(y);
+		_special_food.food.SetX(x);
+		_special_food.food.SetType(SPECIAL_FOOD);
+
+		_map[y][x] = SPECIAL_FOOD;
+	}
+	else 
+	{
+		DisplayScore();
+		throw Error::GAMEOVER();
+	}
 }
 
 void	Game::PrintMap()
@@ -150,7 +239,7 @@ int		Game::PlaceFood()
 		for(size_t x = 0; x < _map[y].size(); x++)
 		{
 			s_point point;
-			if (_map[y][x] == NOTHING && !ValidFood(x, y))
+			if (_map[y][x] == NOTHING && ValidFood(x, y))
 			{
 				point.x = x;
 				point.y = y;
@@ -158,26 +247,34 @@ int		Game::PlaceFood()
 			}
 		}
 	}
-	int i = rand() % points.size();
-	int x = static_cast<int>(points[i].x);
-	int y = static_cast<int>(points[i].y);
-	_food.SetY(y);
-	_food.SetX(x);
-	_food.SetType(FOOD);
+	if (points.size() > 0)
+	{
+		int i = rand() % points.size();
+		int x = static_cast<int>(points[i].x);
+		int y = static_cast<int>(points[i].y);
+		_food.SetY(y);
+		_food.SetX(x);
+		_food.SetType(FOOD);
 
-	_map[y][x] = FOOD;
-	int end = time(NULL);
-	return end - start;
+		_map[y][x] = FOOD;
+		int end = time(NULL);
+		return end - start;
+	}
+	else
+	{
+		DisplayScore();
+		throw Error::GAMEOVER();
+	}
 }
 
 bool	Game::ValidFood(int x, int y)
 {
 	auto snake = this->_snake->getSnake();
-	if (_map[y][x] == SNAKE_BODY || _map[y][x] == SNAKE_HEAD)
-		return true;
+	if (_map[y][x] == SNAKE_BODY || _map[y][x] == SNAKE_HEAD || _map[y][x] == SPECIAL_FOOD || _map[y][x] == FOOD)
+		return false;
 	if (x >= _columns || y >= _rows)
-		return true;
-	return false;
+		return false;
+	return true;
 }
 
 void	Game::PlaceSnake()
@@ -212,6 +309,14 @@ void	Game::UpdateMap()
 	x = _food.GetX();
 	y = _food.GetY();
 	_map[y][x] = FOOD;
+	if (_special_food.active == true && _special_food.time_left != 0)
+	{
+		_map[_special_food.food.GetY()][_special_food.food.GetX()] = SPECIAL_FOOD;
+	}
+	else 
+	{
+		_map[_special_food.food.GetY()][_special_food.food.GetX()] = NOTHING;
+	}
 }
 
 void	Game::ChangeSnakeDirection(int direction)
