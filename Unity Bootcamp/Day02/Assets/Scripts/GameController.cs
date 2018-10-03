@@ -6,8 +6,11 @@ public class GameController : MonoBehaviour {
 
 	public List<GameObject> units = new List<GameObject>();
 	public List<Movement> scripts = new List<Movement>();
+	public GameObject unit;
+	public Transform location;
 	// Use this for initialization
 	void Start () {
+		InvokeRepeating("Spawn", 10.0f, 10.0f);
 		for(int i = 0; i < units.Count; i++)
 		{
 			var script = units[i].GetComponent<Movement>();
@@ -66,5 +69,13 @@ public class GameController : MonoBehaviour {
 		{
 			scripts[i].selected = false;
 		}
+	}
+
+	void Spawn()
+	{
+		GameObject obj = (GameObject)Instantiate(unit, location.position, Quaternion.identity);
+		units.Add(obj);
+		var script = obj.GetComponent<Movement>();
+		scripts.Add(script);
 	}
 }
